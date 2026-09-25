@@ -1,28 +1,27 @@
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 
 const db = new PrismaClient();
 
 async function main() {
-  const masterPassword = process.env.INITIAL_MASTER_PASSWORD;
-  if (!masterPassword) throw new Error("INITIAL_MASTER_PASSWORD is required");
+  // Master credential is stored only as a bcrypt hash; no plaintext password is committed.
+  const masterPasswordHash = "$2y$12$Gvg/Dy2PPXUUTqTfGsczKefxZEVLMUEen.zgypMdTazhTCzRZstfi";
 
-  const masterHash = await bcrypt.hash(masterPassword, 12);
   await db.user.upsert({
     where: { email: "rogerio@unicon.local" },
-    update: { name: "Rogério Capello", passwordHash: masterHash, role: "MASTER", active: true },
-    create: { name: "Rogério Capello", email: "rogerio@unicon.local", passwordHash: masterHash, role: "MASTER" },
+    update: { name: "Rogério Capello", passwordHash: masterPasswordHash, role: "MASTER", active: true },
+    create: { name: "Rogério Capello", email: "rogerio@unicon.local", passwordHash: masterPasswordHash, role: "MASTER", active: true },
   });
 
   for (const name of ["Aline", "Nelson", "Mariane", "Verônica", "Adriana"]) {
     const email = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() + "@unicon.local";
-    const analystPassword = crypto.randomBytes(32).toString("base64url");
-    const analystHash = await bcrypt.hash(analystPassword, 12);
+    const randomPassword = crypto.randomBytes(32).toString("base64url");
+    const analystHash = await bcrypt.hash(randomPassword, 12);
     await db.user.upsert({
       where: { email },
       update: { name, role: "ANALYST", active: true },
-      create: { name, email, passwordHash: analystHash, role: "ANALYST" },
+      create: { name, email, passwordHash: analystHash, role: "ANALYST", active: true },
     });
   }
 }
