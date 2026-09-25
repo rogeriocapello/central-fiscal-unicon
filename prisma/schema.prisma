@@ -1,8 +1,68 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
-enum Role { MASTER ANALYST }
-model User { id String @id @default(cuid()) name String email String @unique passwordHash String role Role @default(ANALYST) active Boolean @default(true) createdAt DateTime @default(now()) auditLogs AuditLog[] }
-model Client { id String @id @default(cuid()) legalName String tradeName String? cnpj String @unique active Boolean @default(true) ownerName String? createdAt DateTime @default(now()) updatedAt DateTime @updatedAt certificates Certificate[] obligations Obligation[] }
-model Certificate { id String @id @default(cuid()) clientId String label String expiresAt DateTime encryptedObjectKey String createdAt DateTime @default(now()) client Client @relation(fields:[clientId],references:[id],onDelete:Cascade) }
-model Obligation { id String @id @default(cuid()) clientId String name String period String dueAt DateTime status String @default("PENDENTE") client Client @relation(fields:[clientId],references:[id],onDelete:Cascade) }
-model AuditLog { id String @id @default(cuid()) userId String? action String entity String entityId String? metadata Json? createdAt DateTime @default(now()) user User? @relation(fields:[userId],references:[id]) }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MASTER
+  ANALYST
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(ANALYST)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  auditLogs    AuditLog[]
+}
+
+model Client {
+  id           String        @id @default(cuid())
+  legalName    String
+  tradeName    String?
+  cnpj         String        @unique
+  active       Boolean       @default(true)
+  ownerName    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  certificates Certificate[]
+  obligations  Obligation[]
+}
+
+model Certificate {
+  id                 String   @id @default(cuid())
+  clientId           String
+  label              String
+  expiresAt          DateTime
+  encryptedObjectKey String
+  createdAt          DateTime @default(now())
+  client             Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model Obligation {
+  id       String   @id @default(cuid())
+  clientId String
+  name     String
+  period   String
+  dueAt    DateTime
+  status   String   @default("PENDENTE")
+  client   Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id])
+}
