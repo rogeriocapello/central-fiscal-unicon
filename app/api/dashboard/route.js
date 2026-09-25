@@ -1,0 +1,1 @@
+import {NextResponse} from "next/server";import {clients,obligations,certificates} from "../../../lib/store";export async function GET(){return NextResponse.json({clients,obligations,certificates,integrations:[{name:"Domínio",status:"A configurar"},{name:"SIEG",status:"A configurar"},{name:"SEFAZ",status:"A configurar"}]})}
