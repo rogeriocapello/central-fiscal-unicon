@@ -1,0 +1,1 @@
+export const metadata={title:"Central Fiscal Unicon",description:"Gestão fiscal e documental Unicon"};export default function RootLayout({children}){return <html lang="pt-BR"><body style={{margin:0,fontFamily:"Arial, sans-serif",background:"#f5f7fa",color:"#172033"}}>{children}</body></html>}
