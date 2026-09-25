@@ -1,0 +1,1 @@
+import {NextResponse}from"next/server";export async function GET(){return NextResponse.json({ok:true,service:"central-fiscal-unicon",version:"0.2.0"})}
