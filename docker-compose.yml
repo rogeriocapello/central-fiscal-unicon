@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: central_fiscal
+      POSTGRES_USER: unicon
+      POSTGRES_PASSWORD: local_only_change_me
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://unicon:local_only_change_me@db:5432/central_fiscal
+      JWT_SECRET: local-development-only-change-me
+      INITIAL_MASTER_PASSWORD: local-development-only-change-me
+    depends_on:
+      - db
+volumes:
+  pgdata:
