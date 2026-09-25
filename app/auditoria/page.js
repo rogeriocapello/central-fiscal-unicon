@@ -1,0 +1,1 @@
+export default function Auditoria(){return <main style={{padding:32}}><a href="/">← Painel</a><h1>Auditoria</h1><p>Registro previsto para login, consulta de credenciais, alteração de clientes, certificados, documentos e configurações.</p><p>Alterações estruturais: somente Master.</p></main>}
